@@ -2,7 +2,8 @@ import readline from 'readline';
 import os from 'os';
 import {WorkDir} from "./modules/workDir/index.js";
 import cat from "./modules/cat.js";
-import {InvalidInput} from "./modules/error.js";
+import {DomainError, InvalidInput, OperationFailed} from "./modules/error.js";
+import {add} from "./modules/add.js";
 
 const workDir = new WorkDir(os.homedir());
 
@@ -45,18 +46,32 @@ process.stdout.write(`Enter your command: `);
 rl.on('line', async (line) => {
     try {
         const [command, ...args] = line.split(' ');
+        let result;
+
         switch (command) {
             case 'up':
                 workDir.up();
                 break;
             case 'cat':
-                console.log(await cat(args[0], workDir.getWorkDir()));
+                const path = args[0];
+                result = cat(path, workDir.getWorkDir());
+                break;
+            case 'add':
+                const filename = args[0];
+                result = add(filename, workDir.getWorkDir()).then(() => `file ${filename} has been created`);
                 break;
             default:
                 throw new InvalidInput('command is not found');
         }
+        if (result) {
+            await result.then((res) => console.log(res));
+        }
     } catch (e) {
-        console.error(`\n${e.message}`);
+        if (e instanceof DomainError) {
+            e.print();
+            return;
+        }
+        OperationFailed.fromError(e).print();
     }
 
     workDir.pwd();
