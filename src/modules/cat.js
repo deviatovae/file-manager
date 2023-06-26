@@ -1,5 +1,5 @@
 import {createReadStream} from 'fs';
-import {InvalidArgInput, OperationFailed} from "./error.js";
+import {InvalidArgInput} from "./error.js";
 import {PathService} from "../service/pathService.js";
 
 /**
@@ -14,7 +14,7 @@ export default async function cat(pathService, path) {
 
     const fullPath = pathService.makeAbsolutePath(path);
 
-    await pathService.validateIsFile(fullPath)
+    await pathService.validateIsFile(fullPath);
 
     const stream = createReadStream(fullPath);
     const chunks = [];

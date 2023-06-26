@@ -10,6 +10,7 @@ import {PathService} from "./service/pathService.js";
 import rn from "./modules/rn.js";
 import cp from "./modules/cp.js";
 import mv from "./modules/mv.js";
+import rm from "./modules/rm.js";
 
 const workDir = new WorkDir(os.homedir());
 const pathService = new PathService(workDir);
@@ -87,6 +88,11 @@ rl.on('line', async (line) => {
                 const newFilename = args[1];
                 result = mv(pathService, filename, newFilename)
                     .then(() => `file ${filename} has been moved to ${newFilename}`);
+                break;
+            }
+            case 'rm': {
+                const filename = args[0];
+                result = rm(pathService, filename).then(() => `file ${filename} has been removed`);
                 break;
             }
             default:

@@ -1,6 +1,6 @@
-import {rm} from 'fs/promises';
 import {PathService} from '../service/pathService.js';
 import cp from "./cp.js";
+import rm from "./rm.js";
 
 /**
  * @param {PathService} pathService
@@ -9,7 +9,5 @@ import cp from "./cp.js";
  * @return {Promise<string>}
  */
 export default async function mv(pathService, filePath, newFilePath) {
-    const fullFilepath = pathService.makeAbsolutePath(filePath);
-    
-    await cp(pathService, filePath, newFilePath).then(() => rm(fullFilepath));
+    await cp(pathService, filePath, newFilePath).then(() => rm(pathService, filePath));
 }

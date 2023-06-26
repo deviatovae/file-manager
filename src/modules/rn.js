@@ -1,13 +1,12 @@
-import {createReadStream} from 'fs';
 import {rename} from 'fs/promises';
-import {InvalidArgInput, OperationFailed} from "./error.js";
+import {InvalidArgInput} from "./error.js";
 import {PathService} from '../service/pathService.js';
 
 /**
  * @param {PathService} pathService
  * @param {string} filePath
  * @param {string} newFilePath
- * @return {Promise<string>}
+ * @return {Promise<void>}
  */
 export default async function rn(pathService, filePath, newFilePath) {
     if (!filePath) {
@@ -20,7 +19,7 @@ export default async function rn(pathService, filePath, newFilePath) {
     const fullFilePath = pathService.makeAbsolutePath(filePath);
     const fullNewFilePath = pathService.makeAbsolutePath(newFilePath);
 
-    await pathService.validateIsFile(fullFilePath)
+    await pathService.validateIsFile(fullFilePath);
 
-    await rename(fullFilePath, fullNewFilePath)
+    await rename(fullFilePath, fullNewFilePath);
 }

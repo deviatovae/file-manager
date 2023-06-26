@@ -6,7 +6,7 @@ import {PathService} from '../service/pathService.js';
  * @param {PathService} pathService
  * @param {string} filePath
  * @param {string} newFilePath
- * @return {Promise<string>}
+ * @return {Promise<void>}
  */
 export default async function cp(pathService, filePath, newFilePath) {
     if (!filePath) {
