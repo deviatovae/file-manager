@@ -12,3 +12,15 @@ export async function getStats(fullPath) {
             throw new OperationFailed(e.message);
         });
 }
+
+export function getConsoleOutput(callback) {
+    const log = console.log;
+    let info = '';
+    console.log = function () {
+        info += Array.from(arguments).join(' ') + '\n';
+    };
+    callback();
+    console.log = log;
+
+    return info
+}

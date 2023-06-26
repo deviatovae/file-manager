@@ -1,5 +1,6 @@
 import os from 'os';
 import {InvalidInput} from "./error.js";
+import {getConsoleOutput} from "../utils/utils.js";
 
 export default class Os {
     eol() {
@@ -7,7 +8,6 @@ export default class Os {
     }
 
     cpus() {
-        console.log(os.cpus());
         return os.cpus().map(({speed, model}) => ({
             Model: model,
             'Clock rate': speed < 100 ? 'Unspecified' : (speed / 1000).toFixed(2)
@@ -40,16 +40,9 @@ export default class Os {
 
             case 'cpus':
                 const cpus = this.cpus();
-                console.log(cpus);
-                const log = console.log
-                let info = ''
-                console.log = function () {
-                    info += Array.from(arguments).join(' ') + '\n';
-                };
-                console.table(cpus);
-                console.log = log;
+                const info = getConsoleOutput(() => console.table(cpus));
 
-                return `cpus count: ${cpus.length}\n${info}`
+                return `cpus count: ${cpus.length}\n${info}`;
 
             case 'homedir':
                 return this.homedir();

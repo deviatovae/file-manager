@@ -1,7 +1,8 @@
 import {join, resolve} from "path";
-import {getStats, makeAbsolutePath} from "../utils/utils.js";
+import {getConsoleOutput, getStats, makeAbsolutePath} from "../utils/utils.js";
 import {InvalidArgInput, InvalidInput} from "./error.js";
 import os from "os";
+import {readdir} from 'fs/promises';
 
 export default class WorkDir {
     constructor(startPath) {
@@ -18,10 +19,10 @@ export default class WorkDir {
 
     async cd(path) {
         if (!path) {
-            throw new InvalidArgInput('path')
+            throw new InvalidArgInput('path');
         }
         if (path.startsWith('~')) {
-            path = join(os.homedir(), path.slice(1))
+            path = join(os.homedir(), path.slice(1));
         }
 
         const fullPath = makeAbsolutePath(path, this.workDir);
@@ -31,6 +32,28 @@ export default class WorkDir {
         }
 
         this.workDir = fullPath;
+    }
+
+    async ls() {
+        const items = await readdir(this.workDir);
+        const promises = items.map(async (item) => {
+            const isDir = (await getStats(makeAbsolutePath(item, this.workDir))).isDirectory();
+            return {
+                Name: item,
+                Type: isDir ? 'Directory' : 'File'
+            };
+        });
+        const objects = (await Promise.all(promises))
+            .sort((a, b) => {
+                if (a.Type === 'Directory') {
+                    return b.Type === 'Directory' ? a.Name.localeCompare(b.Name) : -1;
+                }
+                return b.Type === 'Directory' ? 1 : a.Name.localeCompare(b.Name);
+            });
+
+        return getConsoleOutput(() => {
+            console.table(objects);
+        });
     }
 
     pwd() {
