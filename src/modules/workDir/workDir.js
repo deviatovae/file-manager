@@ -10,7 +10,7 @@ export default class WorkDir {
     }
 
     up() {
-        return resolve(join(this.getWorkDir(), '..'))
+        this.workDir = resolve(join(this.getWorkDir(), '..'))
     }
 
     pwd() {
