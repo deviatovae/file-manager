@@ -4,8 +4,11 @@ import {WorkDir} from "./modules/workDir/index.js";
 import cat from "./modules/cat.js";
 import {DomainError, InvalidInput, OperationFailed} from "./modules/error.js";
 import {add} from "./modules/add.js";
+import {PathService} from "./service/pathService.js";
+import rn from "./modules/rn.js";
 
 const workDir = new WorkDir(os.homedir());
+const pathService = new PathService(workDir);
 
 const greetMsg = `Welcome to the File Manager, {{username}}!\n`;
 const thanksMsg = 'Thank you for using File Manager, {{username}}, goodbye!';
@@ -34,6 +37,7 @@ if (!args.username) {
 
 sendMsgToUser(args.username, greetMsg);
 workDir.pwd();
+process.stdout.write(`\nEnter your command: `);
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -42,7 +46,6 @@ const rl = readline.createInterface({
 
 rl.on('close', () => sendMsgToUser(args.username, thanksMsg));
 
-process.stdout.write(`Enter your command: `);
 rl.on('line', async (line) => {
     try {
         const [command, ...args] = line.split(' ');
@@ -54,11 +57,17 @@ rl.on('line', async (line) => {
                 break;
             case 'cat':
                 const path = args[0];
-                result = cat(path, workDir.getWorkDir());
+                result = cat(pathService, path);
                 break;
             case 'add':
                 const filename = args[0];
-                result = add(filename, workDir.getWorkDir()).then(() => `file ${filename} has been created`);
+                result = add(pathService, filename).then(() => `file ${filename} has been created`);
+                break;
+            case 'rn':
+                const oldFilename = args[0];
+                const newFilename = args[1];
+                result = rn(pathService, oldFilename, newFilename)
+                    .then(() => `file ${oldFilename} has been renamed to ${newFilename}`);
                 break;
             default:
                 throw new InvalidInput('command is not found');
@@ -69,9 +78,9 @@ rl.on('line', async (line) => {
     } catch (e) {
         if (e instanceof DomainError) {
             e.print();
-            return;
+        } else {
+            OperationFailed.fromError(e).print();
         }
-        OperationFailed.fromError(e).print();
     }
 
     workDir.pwd();

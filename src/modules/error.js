@@ -4,13 +4,19 @@ export class DomainError extends Error {
     }
 
     print() {
-        console.error('\n' + this.message);
+        console.log('\n' + this.message);
     }
 }
 
 export class InvalidInput extends DomainError {
     constructor(message) {
         super('Invalid input: ' + message);
+    }
+}
+
+export class InvalidArgInput extends InvalidInput {
+    constructor(argName) {
+        super(`${argName} is not defined`);
     }
 }
 

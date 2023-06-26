@@ -1,24 +1,20 @@
 import {createReadStream} from 'fs';
-import {stat} from 'fs/promises';
-import {InvalidInput, OperationFailed} from "./error.js";
-import {isAbsolute, join} from 'path';
+import {InvalidArgInput, OperationFailed} from "./error.js";
+import {PathService} from "../service/pathService.js";
 
-export default async function cat(path, workDir) {
+/**
+ * @param {PathService} pathService
+ * @param {string} path
+ * @return {Promise<string>}
+ */
+export default async function cat(pathService, path) {
     if (!path) {
-        throw new InvalidInput('path argument is not defined');
+        throw new InvalidArgInput('path');
     }
 
-    const fullPath = isAbsolute(path) || !workDir ? path : join(workDir, path);
+    const fullPath = pathService.makeAbsolutePath(path);
 
-    await stat(fullPath)
-        .catch((e) => {
-            throw new OperationFailed(e.message);
-        })
-        .then((info) => {
-            if (!info.isFile()) {
-                throw new OperationFailed('is not a file');
-            }
-        });
+    await pathService.validateIsFile(fullPath)
 
     const stream = createReadStream(fullPath);
     const chunks = [];

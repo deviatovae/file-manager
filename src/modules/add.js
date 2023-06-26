@@ -1,15 +1,19 @@
 import {open} from 'fs/promises';
-import {join} from 'path';
-import {InvalidInput} from "./error.js";
+import {InvalidArgInput} from "./error.js";
+import {PathService} from "../service/pathService.js";
 
-export async function add(filename, workDir) {
+/**
+ *
+ * @param {PathService} pathService
+ * @param {string} filename
+ * @return {Promise<void>}
+ */
+export async function add(pathService, filename) {
     if (!filename) {
-        throw new InvalidInput('filename argument is not defined');
-    }
-    if (!workDir) {
-        throw new InvalidInput('workDir argument is not defined');
+        throw new InvalidArgInput('filename');
     }
 
-    const file = await open(join(workDir, filename), 'a');
+    const filepath = pathService.makeAbsolutePath(filename);
+    const file = await open(filepath, 'a');
     await file.close();
 }
