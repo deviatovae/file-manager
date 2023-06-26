@@ -1,7 +1,6 @@
 // noinspection ExceptionCaughtLocallyJS
 
 import readline from 'readline';
-import os from 'os';
 import {WorkDir} from "./modules/workDir/index.js";
 import cat from "./modules/cat.js";
 import {DomainError, InvalidInput, OperationFailed} from "./modules/error.js";
@@ -11,7 +10,9 @@ import rn from "./modules/rn.js";
 import cp from "./modules/cp.js";
 import mv from "./modules/mv.js";
 import rm from "./modules/rm.js";
+import {Os} from "./modules/os.js";
 
+const os = new Os();
 const workDir = new WorkDir(os.homedir());
 const pathService = new PathService(workDir);
 
@@ -93,6 +94,10 @@ rl.on('line', async (line) => {
             case 'rm': {
                 const filename = args[0];
                 result = rm(pathService, filename).then(() => `file ${filename} has been removed`);
+                break;
+            }
+            case 'os': {
+                result = os.handleCommand(args[0]);
                 break;
             }
             default:
