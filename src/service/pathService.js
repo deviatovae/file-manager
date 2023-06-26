@@ -1,6 +1,7 @@
 import {isAbsolute, join} from "path";
 import {OperationFailed} from "../modules/error.js";
 import {stat} from 'fs/promises';
+import {getStats, makeAbsolutePath} from "../utils/utils.js";
 
 export default class PathService {
     /**
@@ -11,16 +12,11 @@ export default class PathService {
     }
 
     makeAbsolutePath(path) {
-        return isAbsolute(path) ? path : join(this.workDir.getWorkDir(), path);
+        return makeAbsolutePath(path, this.workDir.getWorkDir())
     }
 
     async isFile(fullPath) {
-        const info = stat(fullPath)
-            .catch((e) => {
-                throw new OperationFailed(e.message);
-            });
-
-        return (await info).isFile();
+        return (await getStats(fullPath)).isFile();
     }
 
     async validateIsFile(filepath) {

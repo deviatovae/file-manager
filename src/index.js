@@ -63,6 +63,11 @@ rl.on('line', async (line) => {
             case 'up':
                 workDir.up();
                 break;
+            case 'cd': {
+                const path = args[0];
+                result = workDir.cd(path);
+                break;
+            }
             case 'cat': {
                 const path = args[0];
                 result = cat(pathService, path);
