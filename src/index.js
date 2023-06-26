@@ -12,10 +12,12 @@ import mv from "./modules/mv.js";
 import rm from "./modules/rm.js";
 import {Os} from "./modules/os.js";
 import hash from "./modules/hash.js";
+import Compressor from "./modules/compressor.js";
 
 const os = new Os();
 const workDir = new WorkDir(os.homedir());
 const pathService = new PathService(workDir);
+const compressor = new Compressor(pathService);
 
 const greetMsg = `Welcome to the File Manager, {{username}}!\n`;
 const thanksMsg = 'Thank you for using File Manager, {{username}}, goodbye!';
@@ -101,6 +103,20 @@ rl.on('line', async (line) => {
                 result = os.handleCommand(args[0]);
                 break;
             }
+            case 'compress': {
+                const filepath = args[0];
+                const destPath = args[1];
+                result = compressor.compressFile(filepath, destPath)
+                    .then(() => `file ${filepath} has been compressed into ${destPath}`);
+                break;
+            }
+            case 'decompress': {
+                const filepath = args[0];
+                const destPath = args[1];
+                result = compressor.decompressFile(filepath, destPath)
+                    .then(() => `file ${destPath} has been decompressed from ${filepath}`);
+                break;
+            }
             case 'hash': {
                 const filepath = args[0];
                 result = hash(pathService, filepath);
@@ -110,7 +126,11 @@ rl.on('line', async (line) => {
                 throw new InvalidInput('command is not found');
         }
         if (result) {
-            await result.then((res) => console.log(res));
+            await result.then((res) => {
+                if (res) {
+                    console.log(res)
+                }
+            });
         }
     } catch (e) {
         if (e instanceof DomainError) {
