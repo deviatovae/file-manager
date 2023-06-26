@@ -11,6 +11,7 @@ import cp from "./modules/cp.js";
 import mv from "./modules/mv.js";
 import rm from "./modules/rm.js";
 import {Os} from "./modules/os.js";
+import hash from "./modules/hash.js";
 
 const os = new Os();
 const workDir = new WorkDir(os.homedir());
@@ -98,6 +99,11 @@ rl.on('line', async (line) => {
             }
             case 'os': {
                 result = os.handleCommand(args[0]);
+                break;
+            }
+            case 'hash': {
+                const filepath = args[0];
+                result = hash(pathService, filepath);
                 break;
             }
             default:
