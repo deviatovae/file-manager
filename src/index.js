@@ -1,3 +1,5 @@
+// noinspection ExceptionCaughtLocallyJS
+
 import readline from 'readline';
 import os from 'os';
 import {WorkDir} from "./modules/workDir/index.js";
@@ -6,6 +8,7 @@ import {DomainError, InvalidInput, OperationFailed} from "./modules/error.js";
 import {add} from "./modules/add.js";
 import {PathService} from "./service/pathService.js";
 import rn from "./modules/rn.js";
+import cp from "./modules/cp.js";
 
 const workDir = new WorkDir(os.homedir());
 const pathService = new PathService(workDir);
@@ -40,8 +43,7 @@ workDir.pwd();
 process.stdout.write(`\nEnter your command: `);
 
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+    input: process.stdin, output: process.stdout
 });
 
 rl.on('close', () => sendMsgToUser(args.username, thanksMsg));
@@ -55,20 +57,30 @@ rl.on('line', async (line) => {
             case 'up':
                 workDir.up();
                 break;
-            case 'cat':
+            case 'cat': {
                 const path = args[0];
                 result = cat(pathService, path);
                 break;
-            case 'add':
+            }
+            case 'add': {
                 const filename = args[0];
                 result = add(pathService, filename).then(() => `file ${filename} has been created`);
                 break;
-            case 'rn':
+            }
+            case 'rn': {
                 const oldFilename = args[0];
                 const newFilename = args[1];
                 result = rn(pathService, oldFilename, newFilename)
                     .then(() => `file ${oldFilename} has been renamed to ${newFilename}`);
                 break;
+            }
+            case 'cp': {
+                const filename = args[0];
+                const newFilename = args[1];
+                result = cp(pathService, filename, newFilename)
+                    .then(() => `file ${filename} has been copied to ${newFilename}`);
+                break;
+            }
             default:
                 throw new InvalidInput('command is not found');
         }
