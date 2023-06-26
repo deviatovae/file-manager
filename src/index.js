@@ -1,16 +1,16 @@
 // noinspection ExceptionCaughtLocallyJS
 
 import readline from 'readline';
-import {WorkDir} from "./modules/workDir/index.js";
+import WorkDir from "./modules/workDir.js";
 import cat from "./modules/cat.js";
 import {DomainError, InvalidInput, OperationFailed} from "./modules/error.js";
-import {add} from "./modules/add.js";
-import {PathService} from "./service/pathService.js";
+import add from "./modules/add.js";
+import PathService from "./service/pathService.js";
 import rn from "./modules/rn.js";
 import cp from "./modules/cp.js";
 import mv from "./modules/mv.js";
 import rm from "./modules/rm.js";
-import {Os} from "./modules/os.js";
+import Os from "./modules/os.js";
 import hash from "./modules/hash.js";
 import Compressor from "./modules/compressor.js";
 

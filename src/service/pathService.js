@@ -2,7 +2,7 @@ import {isAbsolute, join} from "path";
 import {OperationFailed} from "../modules/error.js";
 import {stat} from 'fs/promises';
 
-export class PathService {
+export default class PathService {
     /**
      * @param {WorkDir} workDir
      */

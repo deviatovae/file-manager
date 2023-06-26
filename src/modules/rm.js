@@ -1,5 +1,5 @@
 import {rm as fsRm} from 'fs/promises';
-import {PathService} from '../service/pathService.js';
+import PathService from '../service/pathService.js';
 
 /**
  * @param {PathService} pathService

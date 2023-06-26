@@ -1,7 +1,7 @@
 import os from 'os';
 import {InvalidInput} from "./error.js";
 
-export class Os {
+export default class Os {
     eol() {
         return JSON.stringify(os.EOL);
     }

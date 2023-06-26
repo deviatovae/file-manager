@@ -1,5 +1,5 @@
 import {InvalidArgInput} from "./error.js";
-import {PathService} from "../service/pathService.js";
+import PathService from "../service/pathService.js";
 import {readFile} from "fs/promises";
 import crypto from "crypto";
 

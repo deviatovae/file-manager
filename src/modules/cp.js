@@ -1,6 +1,6 @@
 import {createReadStream, createWriteStream} from 'fs';
 import {InvalidArgInput} from "./error.js";
-import {PathService} from '../service/pathService.js';
+import PathService from '../service/pathService.js';
 
 /**
  * @param {PathService} pathService

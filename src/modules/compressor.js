@@ -1,4 +1,4 @@
-import {PathService} from "../service/pathService.js";
+import PathService from "../service/pathService.js";
 import {createReadStream, createWriteStream} from "fs";
 import {InvalidArgInput, InvalidInput} from "./error.js";
 import {createBrotliCompress, createBrotliDecompress} from 'zlib';

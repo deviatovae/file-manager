@@ -1,6 +1,6 @@
 import {open} from 'fs/promises';
 import {InvalidArgInput} from "./error.js";
-import {PathService} from "../service/pathService.js";
+import PathService from "../service/pathService.js";
 
 /**
  *
@@ -8,7 +8,7 @@ import {PathService} from "../service/pathService.js";
  * @param {string} filename
  * @return {Promise<void>}
  */
-export async function add(pathService, filename) {
+export default async function add(pathService, filename) {
     if (!filename) {
         throw new InvalidArgInput('filename');
     }

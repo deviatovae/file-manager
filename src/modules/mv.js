@@ -1,4 +1,4 @@
-import {PathService} from '../service/pathService.js';
+import PathService from '../service/pathService.js';
 import cp from "./cp.js";
 import rm from "./rm.js";
 
