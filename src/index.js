@@ -9,6 +9,7 @@ import {add} from "./modules/add.js";
 import {PathService} from "./service/pathService.js";
 import rn from "./modules/rn.js";
 import cp from "./modules/cp.js";
+import mv from "./modules/mv.js";
 
 const workDir = new WorkDir(os.homedir());
 const pathService = new PathService(workDir);
@@ -79,6 +80,13 @@ rl.on('line', async (line) => {
                 const newFilename = args[1];
                 result = cp(pathService, filename, newFilename)
                     .then(() => `file ${filename} has been copied to ${newFilename}`);
+                break;
+            }
+            case 'mv': {
+                const filename = args[0];
+                const newFilename = args[1];
+                result = mv(pathService, filename, newFilename)
+                    .then(() => `file ${filename} has been moved to ${newFilename}`);
                 break;
             }
             default:

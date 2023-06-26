@@ -1,6 +1,5 @@
 import {createReadStream, createWriteStream} from 'fs';
-import {rename} from 'fs/promises';
-import {InvalidArgInput, OperationFailed} from "./error.js";
+import {InvalidArgInput} from "./error.js";
 import {PathService} from '../service/pathService.js';
 
 /**
@@ -20,18 +19,18 @@ export default async function cp(pathService, filePath, newFilePath) {
     const fullFilePath = pathService.makeAbsolutePath(filePath);
     const fullNewFilePath = pathService.makeAbsolutePath(newFilePath);
 
-    await pathService.validateIsFile(fullFilePath)
+    await pathService.validateIsFile(fullFilePath);
 
-    const readStream = createReadStream(fullFilePath)
-    const writeStream = createWriteStream(fullNewFilePath, {flags: 'w'})
+    const readStream = createReadStream(fullFilePath);
+    const writeStream = createWriteStream(fullNewFilePath, {flags: 'w'});
 
     return new Promise((resolve, reject) => {
-        readStream.pipe(writeStream)
-        writeStream.on('error', (e) => reject(e))
-        readStream.on('error', (e) => reject(e))
+        readStream.pipe(writeStream);
+        writeStream.on('error', (e) => reject(e));
+        readStream.on('error', (e) => reject(e));
         readStream.on('end', () => {
-            writeStream.close()
-            resolve()
-        })
-    })
+            writeStream.close();
+            resolve();
+        });
+    });
 }
